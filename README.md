@@ -1,7 +1,8 @@
-BlogNest : Blogging platform designed for seamless content creation.
+##BlogNest :   Blogging platform designed for seamless content creation.
 
 
-Tech Stack:
+##Tech Stack:
+
   Frontend: React.js + Tailwind CSS
   
   Backend: Hono (Lightweight, fast, and Edge-friendly)
