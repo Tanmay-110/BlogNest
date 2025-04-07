@@ -36,13 +36,13 @@ userRouter.post('/signup', async (c) => {
         id: user.id
       }, c.env.JWT_SECRET);
   
-      return c.text(jwt)
+      return c.json({ jwt });
     } catch (error) {
       console.error(error)
       return c.text('Error signing up', 500)
     }
   })
-  userRouter.post('signin',async (c) => {
+  userRouter.post('/signin',async (c) => {
     const body = await c.req.json();
     const { success } = signinInput.safeParse(body);
     if (!success) {
@@ -69,7 +69,7 @@ userRouter.post('/signup', async (c) => {
         id: user.id
       }, c.env.JWT_SECRET);
   
-      return c.text(jwt)
+      return c.json({ jwt });
     } catch (error) {
       console.error(error)
       return c.text('Invalid', 411)
