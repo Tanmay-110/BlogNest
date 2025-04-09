@@ -1,0 +1,30 @@
+"$schema" = "node_modules/wrangler/config-schema.json"
+name = "week13"
+main = "src/index.ts"
+compatibility_date = "2025-04-06"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNWQwMzg4NjUtNmNiNy00YzdiLTg5YTctOTdiMmZhNDQzZjU3IiwidGVuYW50X2lkIjoiMTM5OGQwZjE5MTExYTgxNTI3NzM1ZTcyOGUzNmQ4MDdlZjgwODIyM2MyNDEyZjEyODJlOGI1ZTJlYWZhYTU1NSIsImludGVybmFsX3NlY3JldCI6ImRhYjBhYTUyLWUyOTMtNDlmNC05ZTk2LWU1NWI5NTc2ODA0MiJ9.DWAIDoN0-N0NHJrG3ZAgU5BH8TesKPoFYJg6TQ1Mdt4"
+JWT_SECRET = "tanmay01"
+
+[[kv_namespaces]]
+binding = "Tanmay_kv"
+id = "2547eb9edcb24dfda3383a349b2a3e31"
+
+[[r2_buckets]]
+binding = "MY_BUCKET"
+bucket_name = "my-bucket"
+
+[[d1_databases]]
+
+binding = "MY_DB"
+database_name = "my-database"
+database_id = ""
+
+[ai]
+binding = "AI"
+
+[observability]
+enabled = true
+head_sampling_rate = 1

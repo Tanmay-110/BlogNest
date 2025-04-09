@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "lib": [
-      "ESNext"
+      "ES2020"
     ],
-    "types": [
-      "@cloudflare/workers-types/2023-07-01"
-    ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "outDir": "dist"
   },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

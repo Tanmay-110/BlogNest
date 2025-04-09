@@ -1,83 +1,83 @@
 import { signupInput, signinInput } from "@tanmay01/medium-common";
-import { Hono } from "hono";
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-import { sign } from 'hono/jwt'
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
-export const userRouter = new Hono<{
-    Bindings: {
-        DATABASE_URL: string
-        JWT_SECRET: string
-    }
-}>();
+export const userRouter = express.Router();
 
-userRouter.post('/signup', async (c) => {
-
-  const body = await c.req.json();
-  const { success } = signupInput.safeParse(body);
-  if (!success) {
-      c.status(411);
-      return c.json({
-          message: "Inputs not correct"
-      })
-  }
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
-    try {
-      const user = await prisma.user.create({
-        data: {
-          username: body.username,
-          password: body.password,
-          name: body.name,
-        }
-      })
-      const jwt = await sign({
-        id: user.id
-      }, c.env.JWT_SECRET);
-  
-      return c.json({ 
-        jwt,
-        userId: user.id 
-      });
-    } catch (error) {
-      console.error(error)
-      return c.text('Error signing up', 500)
-    }
-  })
-  userRouter.post('/signin',async (c) => {
-    const body = await c.req.json();
-    const { success } = signinInput.safeParse(body);
+userRouter.post('/signup', async (req, res) => {
+  try {
+    const body = req.body;
+    const { success } = signupInput.safeParse(body);
+    
     if (!success) {
-        c.status(411);
-        return c.json({
-            message: "Inputs not correct"
-        })
-    }
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
-  
-    try {
-      const user = await prisma.user.findFirst({
-        where: {
-          username: body.username,
-          password: body.password,
-        }
-      })
-      if (!user) {
-        return c.text('User not found', 404)
-      }
-      const jwt = await sign({
-        id: user.id
-      }, c.env.JWT_SECRET);
-  
-      return c.json({ 
-        jwt,
-        userId: user.id 
+      return res.status(411).json({
+        message: "Inputs not correct"
       });
-    } catch (error) {
-      console.error(error)
-      return c.text('Invalid', 411)
     }
-  })
+    
+    const prisma = new PrismaClient({
+      datasourceUrl: (req as any).env.DATABASE_URL,
+    });
+    
+    const user = await prisma.user.create({
+      data: {
+        username: body.username,
+        password: body.password,
+        name: body.name,
+      }
+    });
+    
+    const token = jwt.sign({
+      id: user.id
+    }, (req as any).env.JWT_SECRET);
+    
+    return res.json({
+      jwt: token,
+      userId: user.id
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Error signing up');
+  }
+});
+
+userRouter.post('/signin', async (req, res) => {
+  try {
+    const body = req.body;
+    const { success } = signinInput.safeParse(body);
+    
+    if (!success) {
+      return res.status(411).json({
+        message: "Inputs not correct"
+      });
+    }
+    
+    const prisma = new PrismaClient({
+      datasourceUrl: (req as any).env.DATABASE_URL,
+    });
+    
+    const user = await prisma.user.findFirst({
+      where: {
+        username: body.username,
+        password: body.password,
+      }
+    });
+    
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    
+    const token = jwt.sign({
+      id: user.id
+    }, (req as any).env.JWT_SECRET);
+    
+    return res.json({
+      jwt: token,
+      userId: user.id
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(411).send('Invalid');
+  }
+});
