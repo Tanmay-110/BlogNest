@@ -7,9 +7,9 @@ export const Blogs = () => {
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
-            <main className="flex-grow pt-20">
-                <div className="bg-secondary-50 py-16">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <main className="flex-grow pt-16">
+                <div className="bg-white py-12">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <ArticleList 
                             title="All Articles" 
                             subtitle="Discover the latest thoughts, ideas, and stories from our community" 

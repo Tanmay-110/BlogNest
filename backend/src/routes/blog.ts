@@ -14,21 +14,27 @@ export const blogRouter = new Hono<{
     }
 }>();
 
-blogRouter.use("/*", async (c, next) => {
+// Authentication middleware for routes that require login
+const authMiddleware = async (c, next) => {
     const authHeader = c.req.header("authorization") || "";
     
     const user = await verify(authHeader, c.env.JWT_SECRET);
     if (user) {
-            // @ts-ignore
-            c.set("userId", user.id);
-            await next();
-        } else {
-            c.status(403);
-            return c.json({
-                message: "You are not logged in"
-            })
-        }
-});
+        // @ts-ignore
+        c.set("userId", user.id);
+        await next();
+    } else {
+        c.status(403);
+        return c.json({
+            message: "You are not logged in"
+        });
+    }
+};
+
+// Apply auth middleware only to routes requiring authentication
+blogRouter.post('*', authMiddleware);
+blogRouter.put('*', authMiddleware);
+blogRouter.delete('*', authMiddleware);
 
 blogRouter.post('/', async (c) => {
     const body = await c.req.json();
@@ -85,6 +91,56 @@ blogRouter.put('/', async (c) => {
     return c.json({
         id: blog.id
     })
+})
+
+// Delete a blog post - only the author can delete their own post
+blogRouter.delete('/:id', async (c) => {
+    const id = c.req.param("id");
+    const userId = c.get("userId");
+    
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    try {
+        // First check if the blog exists and belongs to the current user
+        const blog = await prisma.post.findFirst({
+            where: {
+                id: Number(id)
+            }
+        });
+        
+        if (!blog) {
+            c.status(404);
+            return c.json({
+                message: "Blog post not found"
+            });
+        }
+        
+        // Check if the user is the author of the blog
+        if (blog.authorId !== Number(userId)) {
+            c.status(403);
+            return c.json({
+                message: "You can only delete your own blog posts"
+            });
+        }
+        
+        // Delete the blog post
+        await prisma.post.delete({
+            where: {
+                id: Number(id)
+            }
+        });
+        
+        return c.json({
+            message: "Blog post deleted successfully"
+        });
+    } catch (e) {
+        c.status(500);
+        return c.json({
+            message: "Error while deleting blog post"
+        });
+    }
 })
 
 // Todo: add pagination

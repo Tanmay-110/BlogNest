@@ -6,8 +6,9 @@ import { BACKEND_URL } from "../config";
 export interface Blog {
     "content": string;
     "title": string;
-    "id": number
-    "authorName": string
+    "id": number;
+    "authorId": number;
+    "authorName": string;
 }
 
 export const useBlogs = () => {
@@ -15,15 +16,15 @@ export const useBlogs = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
 
     useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
+        axios.get(`${BACKEND_URL}/api/v1/blog/bulk`)
             .then(response => {
                 setBlogs(response.data.blogs);
                 setLoading(false);
             })
+            .catch(error => {
+                console.error("Error fetching blogs:", error);
+                setLoading(false);
+            });
     }, [])
 
     return {
@@ -38,20 +39,19 @@ export const useBlog = ({ id }: { id: string }) => {
     const [blog, setBlog] = useState<Blog>();
 
     useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
-            headers: {
-                Authorization: localStorage.getItem("token")
-            }
-        })
+        axios.get(`${BACKEND_URL}/api/v1/blog/${id}`)
             .then(response => {
                 setBlog(response.data.blog);
                 setLoading(false);
             })
+            .catch(error => {
+                console.error("Error fetching blog:", error);
+                setLoading(false);
+            });
     }, [id])
 
     return {
         loading,
         blog
     }
-
 }

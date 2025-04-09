@@ -23,7 +23,9 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
+    // Clear all auth-related data
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     navigate('/signin');
   };
 
@@ -32,7 +34,7 @@ export default function Navbar() {
       name: 'Articles',
       path: '/blogs',
       icon: <HiOutlinePencilAlt className="w-5 h-5" />,
-      requiresAuth: true
+      requiresAuth: false
     },
     {
       name: 'Write',

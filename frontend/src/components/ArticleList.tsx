@@ -16,29 +16,29 @@ export default function ArticleList({
   loading = false 
 }: ArticleListProps) {
   return (
-    <div className="bg-white py-8 sm:py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center mb-12">
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-secondary-900 sm:text-4xl">
+    <div className="bg-white py-8 sm:py-12 w-full">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center mb-12">
+          <h2 className="font-serif text-4xl font-bold tracking-tight text-black sm:text-5xl">
             {title}
           </h2>
-          <p className="mt-2 text-lg leading-8 text-secondary-600">
+          <p className="mt-2 text-xl leading-8 text-black">
             {subtitle}
           </p>
         </div>
         
         {loading ? (
-          <div className="mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div className="mx-auto grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8">
+            {[1, 2, 3, 4].map((i) => (
               <ArticleSkeleton key={i} />
             ))}
           </div>
         ) : blogs.length === 0 ? (
           <div className="mt-16 text-center">
-            <p className="text-lg text-secondary-600">No articles yet. Be the first to publish!</p>
+            <p className="text-lg text-black">No articles yet. Be the first to publish!</p>
           </div>
         ) : (
-          <div className="mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 max-w-6xl">
             {[...blogs]
               .sort((a, b) => b.id - a.id)
               .map((blog) => (

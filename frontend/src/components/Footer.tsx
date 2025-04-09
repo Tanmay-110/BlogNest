@@ -15,17 +15,17 @@ export default function Footer() {
     social: [
       {
         name: 'Twitter',
-        href: '#',
+        href: 'https://x.com/Tanmay_1483',
         icon: FiTwitter,
       },
       {
         name: 'GitHub',
-        href: '#',
+        href: 'https://github.com/Tanmay-110',
         icon: FiGithub,
       },
       {
         name: 'LinkedIn',
-        href: '#',
+        href: 'https://www.linkedin.com/in/tanmay-mahale-795a7a274/',
         icon: FiLinkedin,
       },
     ],
@@ -45,7 +45,7 @@ export default function Footer() {
         </nav>
         <div className="mt-8 flex justify-center space-x-10">
           {navigation.social.map((item) => (
-            <a key={item.name} href={item.href} className="text-secondary-500 hover:text-primary-600 transition-colors">
+            <a key={item.name} href={item.href} className="text-secondary-500 hover:text-primary-600 transition-colors" target="_blank" rel="noopener noreferrer">
               <span className="sr-only">{item.name}</span>
               <item.icon className="h-6 w-6" aria-hidden="true" />
             </a>
@@ -53,6 +53,9 @@ export default function Footer() {
         </div>
         <p className="mt-10 text-center text-xs leading-5 text-secondary-500">
           &copy; {currentYear} BlogNest. All rights reserved.
+        </p>
+        <p className="mt-2 text-center text-xs leading-5 text-secondary-400">
+          Developed by <a href="https://github.com/Tanmay-110" target="_blank" rel="noopener noreferrer" className="hover:text-primary-600 transition-colors">Tanmay Mahale</a>
         </p>
       </div>
     </footer>
